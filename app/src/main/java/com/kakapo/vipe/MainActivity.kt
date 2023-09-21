@@ -8,8 +8,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -43,7 +45,15 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Text(text = "Start Vipe")
                         }
+                        Spacer(modifier = Modifier.size(24.dp))
+                        Button(
+                            modifier = Modifier.height(48.dp),
+                            onClick = { stopCharacterService() }
+                        ) {
+                            Text(text = "Stop Vipe")
+                        }
                     }
+
                 }
             }
         }
@@ -57,6 +67,10 @@ class MainActivity : ComponentActivity() {
                 startService(Intent(this, VipeService::class.java))
             }
         }
+    }
+
+    private fun stopCharacterService(){
+        stopService(Intent(this, VipeService::class.java))
     }
 
     private fun checkOverlayPermission() {

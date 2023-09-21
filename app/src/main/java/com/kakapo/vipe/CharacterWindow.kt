@@ -23,6 +23,7 @@ class CharacterWindow(context: Context) {
     private var view: View
     private lateinit var layoutParams: WindowManager.LayoutParams
     private var windowManager: WindowManager
+    private var directionChar: Direction = Direction.Right
 
     init {
         initializeLayoutParams()
@@ -73,17 +74,26 @@ class CharacterWindow(context: Context) {
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getRealMetrics(displayMetrics)
         val screenWidth = displayMetrics.widthPixels
-        while (layoutParams.x <= (screenWidth/2)) {
-            layoutParams.x += 1
+        while (true){
+            if (layoutParams.x <= (screenWidth/2) && directionChar == Direction.Right){
+                layoutParams.x += 1
+                if (layoutParams.x == (screenWidth/2)){
+                    directionChar = Direction.Left
+                }
+            }
+            if (layoutParams.x > -(screenWidth/2) && directionChar == Direction.Left){
+                layoutParams.x -= 1
+                if (layoutParams.x == -(screenWidth/2)){
+                    directionChar = Direction.Right
+                }
+            }
             windowManager.updateViewLayout(view, layoutParams)
-            Log.d("Character Window", "screen_width $screenWidth, ${layoutParams.x}")
-            delay(1_00)
-        }
-        while (layoutParams.x > -(screenWidth/2)){
-            layoutParams.x -= 1
-            windowManager.updateViewLayout(view, layoutParams)
-            Log.d("Character Window", "screen_width $screenWidth, ${layoutParams.x}")
-            delay(1_00)
+            delay(1_0)
         }
     }
+}
+
+enum class Direction{
+    Left,
+    Right
 }
