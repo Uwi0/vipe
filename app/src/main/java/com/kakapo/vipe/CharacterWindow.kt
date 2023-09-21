@@ -9,17 +9,8 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -43,11 +34,16 @@ class CharacterWindow(context: Context) {
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             layoutParams = WindowManager.LayoutParams(
+                CHARACTER_SIZE_PX,
+                CHARACTER_SIZE_PX,
+                0,
+                0,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
             )
         }
+
         view = ComposeView(context).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             val lifecycleOwner = MyLifecycleOwner()
@@ -62,19 +58,10 @@ class CharacterWindow(context: Context) {
             }
             setViewTreeViewModelStoreOwner(viewModelStoreOwner)
             setContent {
-                var offset by remember { mutableIntStateOf(100) }
-                LaunchedEffect(key1 = Unit){
-                    while (true){
-                        delay(100)
-                        offset++
-                    }
-                }
-
                 Box(modifier = Modifier.size(CHARACTER_SIZE_DP.dp)) {
                     Image(
                         modifier = Modifier
-                            .size(64.dp, 96.dp)
-                            .offset(x = offset.dp),
+                            .size(64.dp, 96.dp),
                         painter = painterResource(id = R.drawable.img_mumei_char),
                         contentDescription = ""
                     )
@@ -94,6 +81,14 @@ class CharacterWindow(context: Context) {
             }
         } catch (e: Exception) {
             Log.d("Window", "error create window${e.message}")
+        }
+    }
+
+    suspend fun updatePosition(){
+        while (true){
+            layoutParams.x += 1
+            windowManager.updateViewLayout(view, layoutParams)
+            delay(1_00)
         }
     }
 }

@@ -10,8 +10,16 @@ import android.os.Build
 import android.os.IBinder
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class VipeService : Service() {
+
+
+    private val scope = CoroutineScope(Dispatchers.Main + Job())
 
     override fun onBind(intent: Intent?): IBinder? {
         throw UnsupportedOperationException("Not yet implemented")
@@ -26,6 +34,9 @@ class VipeService : Service() {
         }
         val characterWindow = CharacterWindow(this)
         characterWindow.open()
+        scope.launch {
+            characterWindow.updatePosition()
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -56,6 +67,10 @@ class VipeService : Service() {
     companion object{
         const val NOTIFICATION_CHANNEL_ID = "kakapo.vipeService"
         const val CHANNEL_NAME = "Vipe Service"
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
     }
 }
