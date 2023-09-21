@@ -40,6 +40,14 @@ android {
 
 dependencies {
 
+//    implementation(project(":core:common"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:designsystem"))
+//    implementation(project(":core:data"))
+//    implementation(project(":core:model"))
+//    implementation(project(":core:analytics"))
+
+
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)

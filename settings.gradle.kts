@@ -16,3 +16,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Vipe"
 include(":app")
+include(":core:designsystem")
+include(":core:ui")

@@ -60,6 +60,9 @@ turbine = "0.12.3"
 
 window = "1.1.0"
 lifecycle = "2.6.2"
+kotlin1910 = "1.9.10"
+junit = "1.1.5"
+material = "1.9.0"
 
 [libraries]
 accompanist-navigation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "accompanist-navigation"}
@@ -158,6 +161,8 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 
 androidx-window = { group = "androidx.window", name = "window", version.ref = "window" }
+junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -172,6 +177,7 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin1910" }
 
 [bundles]
 
