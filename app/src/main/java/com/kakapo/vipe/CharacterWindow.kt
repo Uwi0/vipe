@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.WINDOW_SERVICE
 import android.graphics.PixelFormat
 import android.os.Build
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -24,13 +25,13 @@ class CharacterWindow(context: Context) {
     private var windowManager: WindowManager
 
     init {
-        initializeLayoutParam()
+        initializeLayoutParams()
         view = contentView(context)
         layoutParams.gravity = Gravity.BOTTOM
         windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
     }
 
-    private fun initializeLayoutParam() {
+    private fun initializeLayoutParams() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             layoutParams = WindowManager.LayoutParams(
                 CHARACTER_SIZE_PX,
@@ -69,9 +70,19 @@ class CharacterWindow(context: Context) {
     }
 
     suspend fun updatePosition() {
-        while (true) {
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getRealMetrics(displayMetrics)
+        val screenWidth = displayMetrics.widthPixels
+        while (layoutParams.x <= (screenWidth/2)) {
             layoutParams.x += 1
             windowManager.updateViewLayout(view, layoutParams)
+            Log.d("Character Window", "screen_width $screenWidth, ${layoutParams.x}")
+            delay(1_00)
+        }
+        while (layoutParams.x > 0){
+            layoutParams.x -= 1
+            windowManager.updateViewLayout(view, layoutParams)
+            Log.d("Character Window", "screen_width $screenWidth, ${layoutParams.x}")
             delay(1_00)
         }
     }
