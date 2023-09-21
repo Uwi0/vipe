@@ -9,11 +9,9 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.kakapo.vipe.utils.windowViewFactory
 import kotlinx.coroutines.delay
@@ -47,12 +45,12 @@ class CharacterWindow(context: Context) {
 
     private fun contentView(context: Context) = windowViewFactory(context) {
         Box(modifier = Modifier.size(CHARACTER_SIZE_DP.dp)) {
-            Image(
-                modifier = Modifier
-                    .size(64.dp, 96.dp),
-                painter = painterResource(id = R.drawable.img_mumei_char),
-                contentDescription = ""
-            )
+//            Image(
+//                modifier = Modifier
+//                    .size(64.dp, 96.dp),
+//                painter = painterResource(id = R.drawable.img_mumei_char),
+//                contentDescription = ""
+//            )
         }
     }
 
