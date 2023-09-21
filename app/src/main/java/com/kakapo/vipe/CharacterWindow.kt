@@ -12,17 +12,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.setViewTreeLifecycleOwner
-import androidx.lifecycle.setViewTreeViewModelStoreOwner
-import androidx.savedstate.setViewTreeSavedStateRegistryOwner
-import com.kakapo.vipe.utils.MyLifecycleOwner
+import com.kakapo.vipe.utils.windowViewFactory
 import kotlinx.coroutines.delay
 
 class CharacterWindow(context: Context) {
@@ -32,6 +24,13 @@ class CharacterWindow(context: Context) {
     private var windowManager: WindowManager
 
     init {
+        initializeLayoutParam()
+        view = contentView(context)
+        layoutParams.gravity = Gravity.BOTTOM
+        windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
+    }
+
+    private fun initializeLayoutParam() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             layoutParams = WindowManager.LayoutParams(
                 CHARACTER_SIZE_PX,
@@ -43,34 +42,19 @@ class CharacterWindow(context: Context) {
                 PixelFormat.TRANSLUCENT
             )
         }
-
-        view = ComposeView(context).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            val lifecycleOwner = MyLifecycleOwner()
-            val viewModelStore = ViewModelStore()
-            lifecycleOwner.performRestore(null)
-            lifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-            setViewTreeLifecycleOwner(lifecycleOwner)
-            setViewTreeSavedStateRegistryOwner(lifecycleOwner)
-            val viewModelStoreOwner = object : ViewModelStoreOwner {
-                override val viewModelStore: ViewModelStore
-                    get() = viewModelStore
-            }
-            setViewTreeViewModelStoreOwner(viewModelStoreOwner)
-            setContent {
-                Box(modifier = Modifier.size(CHARACTER_SIZE_DP.dp)) {
-                    Image(
-                        modifier = Modifier
-                            .size(64.dp, 96.dp),
-                        painter = painterResource(id = R.drawable.img_mumei_char),
-                        contentDescription = ""
-                    )
-                }
-            }
-        }
-        layoutParams.gravity = Gravity.BOTTOM
-        windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
     }
+
+    private fun contentView(context: Context) = windowViewFactory(context) {
+        Box(modifier = Modifier.size(CHARACTER_SIZE_DP.dp)) {
+            Image(
+                modifier = Modifier
+                    .size(64.dp, 96.dp),
+                painter = painterResource(id = R.drawable.img_mumei_char),
+                contentDescription = ""
+            )
+        }
+    }
+
 
     fun open() {
         try {
@@ -84,8 +68,8 @@ class CharacterWindow(context: Context) {
         }
     }
 
-    suspend fun updatePosition(){
-        while (true){
+    suspend fun updatePosition() {
+        while (true) {
             layoutParams.x += 1
             windowManager.updateViewLayout(view, layoutParams)
             delay(1_00)
